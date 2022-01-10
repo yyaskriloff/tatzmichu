@@ -8,6 +8,12 @@ const nodemailer = require('nodemailer')
 const helmet = require('helmet')
 const fs = require('fs')
 
+
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', 'https://tatzmichu.org')
+    next()
+})
+
 app.use(express.static('public'))
 // app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
@@ -20,6 +26,9 @@ app.get('/', (req, res, next) => {
 
 app.post('/', async (req, res, next) => {
     const { name, email, Message } = req.body
+    if (name == undefined || email == undefined) {
+        return next(new Error(500))
+    }
     try {
         let transporter = nodemailer.createTransport({
             // host: "smtp.gmail.com",
@@ -43,7 +52,7 @@ app.post('/', async (req, res, next) => {
 
         })
             .then(info => {
-                res.status(200).json({ message: info })
+                res.status(200).send()
             })
     } catch (e) {
         console.log(e)
@@ -144,7 +153,7 @@ app.use((req, res) => {
 })
 
 app.use((err, req, res, next) => {
-    res.redirect('/')
+    res.status(500).send()
 })
 
 
