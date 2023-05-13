@@ -10,7 +10,8 @@ const fs = require('fs')
 
 
 app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', 'https://tatzmichu.org')
+    res.setHeader('Access-Control-Allow-Origin', '*')
+    console.log(req)
     next()
 })
 
